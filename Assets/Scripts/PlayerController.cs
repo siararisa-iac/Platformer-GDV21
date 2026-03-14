@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float jumpForce = 200f;
 
+    [Header("Animation")]
+    private Animator animator;
+
     [Header("Ground Settings")]
     [SerializeField]
     // What layers are considered as ground
@@ -35,12 +38,15 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     // Check input in the update function
     private void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
+        float animationMoveSpeed = Mathf.Abs(horizontalInput);
+        animator.SetFloat("moveSpeed", animationMoveSpeed);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
