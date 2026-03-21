@@ -6,8 +6,8 @@ public class GameManager : Singleton<GameManager>
     public void StartGame()
     {
         ScoreManager.Instance.ResetScore();
-    }
 
+    }
 
     public void PauseGame()
     {
