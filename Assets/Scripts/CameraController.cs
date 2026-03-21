@@ -27,6 +27,5 @@ public class CameraController : MonoBehaviour
         Vector3 smoothPosition = Vector3.Lerp(transform.position,
             targetCameraPosition, smoothFactor * Time.deltaTime);
         transform.position = smoothPosition;
-
     }
 }
