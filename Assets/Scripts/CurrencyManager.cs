@@ -1,9 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 public class CurrencyManager : Singleton<CurrencyManager>
 {
     // data collection that will store all currencies in game
     private List<Currency> currencies;
+
+    public Action<CurrencyType, int> OnCurrencyUpdated;
+
+    // public delegate void CurrencyUpdatedDelegate(CurrencyType type, int balance);
+    // public event CurrencyUpdatedDelegate OnCurrencyUpdate;
 
     private void Start()
     {
@@ -27,7 +33,12 @@ public class CurrencyManager : Singleton<CurrencyManager>
             {
                 currency.Balance += amountToAdd;
                 currency.Balance = Mathf.Min(currency.Balance, currency.MaxBalance);
-                Debug.Log($"{currencyType} Balance is: {currency.Balance} / {currency.MaxBalance}");
+                OnCurrencyUpdated?.Invoke(currency.CurrencyType, currency.Balance);
+
+                //if (OnCurrencyUpdated != null)
+                //{
+                //    OnCurrencyUpdated.Invoke();
+                //
             }
         }
     }

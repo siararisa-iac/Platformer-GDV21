@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Health : MonoBehaviour 
+public abstract class Health : MonoBehaviour 
 {
     [SerializeField]
     protected int maxHealth = 3;
@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.OnGameStarted += Initialize;
         Initialize();
     }
 
@@ -17,22 +18,20 @@ public class Health : MonoBehaviour
     private void Initialize()
     {
         currentHealth = maxHealth;
-        LogHealth();
+        OnHealthUpdated(currentHealth);
     }
 
     public void UpdateHealth(int value)
     {
         currentHealth += value;
-        LogHealth();
+        OnHealthUpdated(currentHealth);
 
         if (currentHealth <= 0)
         {
-            GameManager.Instance.SetEndGameStatus(false);
+            OnDeath();
         }
     }
 
-    private void LogHealth()
-    {
-        Debug.Log($"{gameObject.name}'s Health = {currentHealth} / {maxHealth}");
-    }
+    protected abstract void OnDeath();
+    protected abstract void OnHealthUpdated(int currentHealth);
 }

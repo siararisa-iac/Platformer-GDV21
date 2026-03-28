@@ -27,13 +27,16 @@ public class PlayerController : MonoBehaviour
     // How big is the radius of the groundchecker
     private float groundRadius = 0.1f;
 
+    [SerializeField]
+    private Transform spawnPoint;
+
     private Rigidbody2D playerRigidbody;
     private SpriteRenderer spriteRenderer;
     private float horizontalInput;
     private bool isFacingRight = true;
     private bool isJumpInput = false;
-    
 
+    private bool canControl = true;
     private void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -41,9 +44,33 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        GameManager.Instance.OnGameStarted += HandleGameStarted;
+        GameManager.Instance.OnGameEnded += HandleGameEnded;
+    }
+
+    private void HandleGameStarted()
+    {
+        canControl = true;
+        playerRigidbody.WakeUp();
+        transform.position = spawnPoint.position;
+    }
+
+    private void HandleGameEnded(bool isWin)
+    {
+        canControl = false;
+        playerRigidbody.Sleep();
+    }
+
     // Check input in the update function
     private void Update()
     {
+        if (!canControl)
+        {
+            return;
+        }
+
         horizontalInput = Input.GetAxis("Horizontal");
         float animationMoveSpeed = Mathf.Abs(horizontalInput);
         animator.SetFloat("moveSpeed", animationMoveSpeed);
